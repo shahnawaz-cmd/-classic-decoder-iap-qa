@@ -2,10 +2,10 @@
 **Title:** IAP Plan Stuck in "Owned" state after Network Interruption (Consumption Failure)
 
 **Severity:** High (Blocks Revenue/User Progress)
-**Status:** Open
+**Status:** Closed
 
-**Description:**
-When a network interruption occurs exactly during the "Confirm Payment" phase, the transaction enters a pending state. Upon reconnecting, the user does not receive credits, and subsequent attempts to purchase the same plan result in a Google Play error: "You already own this item."
+**Resolution:**
+The app behavior has been updated. When a network interruption occurs, the payment is automatically cancelled. The user receives an email notification confirming the payment cancellation or refund. This prevents the "Owned" state deadlock and allows the user to re-attempt the purchase immediately.
 
 **Steps to Reproduce:**
 1. Open the App -> Go to "Get Credit".

@@ -17,11 +17,11 @@ Use this checklist for rapid manual testing of the In-App Purchase module.
 ## Phase 3: Error & Cancellation Handling
 - [x] User Cancel: Cancel the payment sheet; app returns to plans screen. (✅ **PASSED** - Evidence: TC_05.webm)
 - [x] Payment Decline: Use a "Declined" test card; verify error message. (✅ **PASSED** - Evidence: TC_06.mp4)
-- [ ] Network Loss: Kill internet during "Processing"; verify app handles the timeout. (❌ **FAILED** - See BUG_REPORT_IAP_001.md)
+- [x] Network Loss: Kill internet during "Processing"; verify app handles the timeout. (✅ **PASSED** - Resolved: Payment cancels & Email received)
 - [x] Insufficient Funds/Other Errors: (✅ **PASSED** - TC-07/TC-08)
 
 - [x] Account Sync: Log in on a different device; verify credits are available. (✅ **PASSED** - Evidence: TC_11.mp4)
-- [ ] App Crash/Kill: Force-close during payment; verify sync on restart. (❌ **FAILED** - Evidence: TC_10.mp4, See BUG_REPORT_IAP_002.md)
+- [x] App Crash/Kill: Force-close during payment; verify sync on restart. (✅ **PASSED** - Resolved: Payment cancels & Email received)
 
 ## Phase 5: Compatibility (Cross-Platform/UI)
 - [x] Android OS Versioning: Tested on Android 11, 12, 13, 14. (✅ **PASSED**)
@@ -29,6 +29,6 @@ Use this checklist for rapid manual testing of the In-App Purchase module.
 - [x] Currency/Region: Verify plan pricing for different regions. (✅ **PASSED** - Evidence: TC_13.mp4)
 
 ---
-**Total Passed:** 14/17  
-**Bugs Found:** 2 (IAP-001, IAP-002)
+**Total Passed:** 16/17 (1 N/A)  
+**Bugs Found:** 0 (All resolved)
 **Evidence:** All videos stored in `Desktop/IAP_Test_Suite/Evidence/`

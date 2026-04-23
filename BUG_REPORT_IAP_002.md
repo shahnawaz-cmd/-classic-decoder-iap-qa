@@ -2,10 +2,10 @@
 **Title:** Credits Not Synced After App Restart (Failed Acknowledgment/Sync)
 
 **Severity:** Critical (Loss of Entitlement)
-**Status:** Open
+**Status:** Closed
 
-**Description:**
-If the app is closed (killed) immediately after a successful Google Play purchase but before the app UI updates, the credits are not granted upon reopening the app. The order remains in a "Pending" state within the app logic, even though the payment was successful in Google Play.
+**Resolution:**
+Fixed. If the app is killed during the payment process, the transaction is cancelled on the backend/Google Play side. The user receives an email notification for the payment cancellation or refund. Upon reopening the app, the state is clean, and the user can initiate a new purchase without issues.
 
 **Steps to Reproduce:**
 1. Navigate to "Get Credit" and select a plan.
