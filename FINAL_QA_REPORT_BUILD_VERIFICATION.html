@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Verification & Final QA Report — Classic Decoder App V2.0.2</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f6f9; color: #1a1a2e; line-height: 1.6; }
+
+  header { background: linear-gradient(135deg, #1a1a2e, #16213e); color: #fff; padding: 36px 40px; }
+  header h1 { font-size: 1.8rem; font-weight: 700; letter-spacing: 0.5px; }
+  header .meta { margin-top: 12px; display: flex; gap: 24px; flex-wrap: wrap; font-size: 0.9rem; opacity: 0.85; }
+  header .meta span strong { opacity: 1; }
+
+  .status-badge { display: inline-block; margin-top: 14px; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.9rem; background: #f59e0b; color: #1a1a2e; }
+
+  main { max-width: 1100px; margin: 32px auto; padding: 0 20px 60px; }
+
+  section { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 28px 32px; margin-bottom: 24px; }
+  section h2 { font-size: 1.15rem; font-weight: 700; color: #16213e; border-left: 4px solid #3b82f6; padding-left: 12px; margin-bottom: 16px; }
+  section h3 { font-size: 1rem; font-weight: 600; color: #374151; margin: 20px 0 10px; }
+
+  p { margin-bottom: 10px; font-size: 0.95rem; }
+  ul { padding-left: 20px; font-size: 0.95rem; }
+  ul li { margin-bottom: 6px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 8px; }
+  th { background: #f1f5f9; text-align: left; padding: 10px 14px; font-weight: 600; color: #374151; border-bottom: 2px solid #e2e8f0; }
+  td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafc; }
+
+  .passed { color: #16a34a; font-weight: 600; }
+  .failed { color: #dc2626; font-weight: 600; }
+  .partial { color: #d97706; font-weight: 600; }
+  .na { color: #6b7280; font-weight: 600; }
+
+  .bug-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px 24px; margin-bottom: 20px; }
+  .bug-card.high { border-left: 5px solid #dc2626; }
+  .bug-card.medium { border-left: 5px solid #f59e0b; }
+  .bug-card h3 { margin-top: 0; font-size: 1rem; color: #1a1a2e; }
+  .bug-card table td:first-child { font-weight: 600; width: 160px; color: #374151; }
+  .bug-card table { margin-top: 12px; }
+  .bug-card table td { border-bottom: 1px solid #f1f5f9; }
+
+  .callout { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px 18px; font-size: 0.9rem; color: #166534; margin-top: 12px; }
+
+  footer { text-align: center; font-size: 0.85rem; color: #6b7280; padding: 20px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📋 Build Verification &amp; Final QA Report</h1>
+  <div class="meta">
+    <span><strong>Project:</strong> Classic Decoder App V2.0.2</span>
+    <span><strong>Date:</strong> April 27, 2026</span>
+    <span><strong>Environment:</strong> Production</span>
+    <span><strong>Lead QA:</strong> Shahnawaz</span>
+  </div>
+  <div class="status-badge">🟡 CONDITIONALLY APPROVED — REGRESSION ISSUES IDENTIFIED</div>
+</header>
+
+<main>
+
+  <!-- Executive Summary -->
+  <section>
+    <h2>1. Executive Summary</h2>
+    <p>This report summarizes the final Build Verification Testing (BVT) for the production build. Testing covered <strong>In-App Purchases (IAP)</strong>, <strong>User Authentication</strong>, <strong>Localization</strong>, and <strong>Content Generation (Reports/Stickers)</strong>. All IAP test cases have passed on the production environment. However, regression testing has identified <strong>2 new issues</strong> — a Social Authentication failure and an IAP screen localization gap — that must be resolved before a full green-light can be issued.</p>
+  </section>
+
+  <!-- Module Status -->
+  <section>
+    <h2>2. Tested Modules &amp; Feature Status</h2>
+    <table>
+      <thead><tr><th>Feature Area</th><th>Sub-Flows Tested</th><th>Status</th><th>Remarks</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Login / Signup</strong></td><td>Account Creation, Profile Persistence, Login Redirection</td><td class="passed">✅ PASSED</td><td>Smooth onboarding; profile sync verified.</td></tr>
+        <tr><td><strong>Social Authentication</strong></td><td>OAuth Login (Multiple Accounts)</td><td class="failed">❌ FAILED</td><td>"An error occurred" shown for multiple email accounts. See REG-001.</td></tr>
+        <tr><td><strong>In-App Purchase (IAP)</strong></td><td>Success Flow, Cancellation, Regional Pricing, Edge Cases</td><td class="passed">✅ PASSED</td><td>All IAP test cases passed on production build.</td></tr>
+        <tr><td><strong>Localization (App-wide)</strong></td><td>Multi-language support across all screens</td><td class="partial">🟡 PARTIAL</td><td>All screens localized correctly except IAP Plans &amp; IAP Pop-up. See REG-002.</td></tr>
+        <tr><td><strong>Report Generation</strong></td><td>Vehicle Data Retrieval → Final Report Generation</td><td class="passed">✅ PASSED</td><td>Reports generate correctly based on VIN.</td></tr>
+        <tr><td><strong>Sticker Generation</strong></td><td>UI Selection → Preview → File Generation</td><td class="passed">✅ PASSED</td><td>PDF/Image output is high resolution.</td></tr>
+        <tr><td><strong>Preview Page</strong></td><td>Item Details, Layout Scaling, Image Zoom</td><td class="passed">✅ PASSED</td><td>High-fidelity previews; UI is responsive.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- IAP Test Cases -->
+  <section>
+    <h2>3. IAP Test Cases — Production Build Results</h2>
+
+    <h3>3.1 Positive Test Cases (Happy Path)</h3>
+    <table>
+      <thead><tr><th>ID</th><th>Title</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>TC-01</td><td>Successful Purchase</td><td class="passed">✅ PASSED</td></tr>
+        <tr><td>TC-02</td><td>Signup to Purchase</td><td class="passed">✅ PASSED</td></tr>
+        <tr><td>TC-03</td><td>Receipt Verification</td><td class="na">➖ N/A (Confirmed by Dev)</td></tr>
+        <tr><td>TC-04</td><td>Plan UI Update</td><td class="passed">✅ PASSED</td></tr>
+      </tbody>
+    </table>
+
+    <h3>3.2 Negative Test Cases</h3>
+    <table>
+      <thead><tr><th>ID</th><th>Title</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>TC-05</td><td>Payment Cancellation</td><td class="passed">✅ PASSED</td></tr>
+        <tr><td>TC-06</td><td>Declined Transaction</td><td class="passed">✅ PASSED</td></tr>
+        <tr><td>TC-07</td><td>Insufficient Funds</td><td class="passed">✅ PASSED</td></tr>
+        <tr><td>TC-08</td><td>Duplicate Purchase</td><td class="passed">✅ PASSED</td></tr>
+      </tbody>
+    </table>
+
+    <h3>3.3 Edge Cases (Critical)</h3>
+    <table>
+      <thead><tr><th>ID</th><th>Title</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>TC-09</td><td>Network Loss (Mid-Pay)</td><td class="passed">✅ PASSED (Resolved)</td></tr>
+        <tr><td>TC-10</td><td>App Force-Kill during Spinner</td><td class="passed">✅ PASSED (Resolved)</td></tr>
+        <tr><td>TC-11</td><td>Device Switching (A → B)</td><td class="passed">✅ PASSED (Credits sync across devices)</td></tr>
+        <tr><td>TC-13</td><td>Regional Currency Symbols</td><td class="passed">✅ PASSED (Local currency shown correctly)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>3.4 Compatibility &amp; Responsiveness</h3>
+    <table>
+      <thead><tr><th>ID</th><th>Title</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>CP-01</td><td>Android Versioning (11, 12, 13, 14)</td><td class="passed">✅ PASSED</td></tr>
+        <tr><td>CP-02</td><td>Viewport/UI (Small, Medium, Large/Tablet)</td><td class="passed">✅ PASSED</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Regression Issues -->
+  <section>
+    <h2>4. Regression Issues (New — Found in Production Testing)</h2>
+
+    <div class="bug-card high">
+      <h3>🔴 REG-001 — Social Authentication Failure</h3>
+      <table>
+        <tr><td>Severity</td><td>🔴 High</td></tr>
+        <tr><td>Area</td><td>Login / Social Auth</td></tr>
+        <tr><td>Description</td><td>Social authentication (OAuth) is not working. Tested with multiple email accounts and all attempts result in a generic <strong>"An error occurred"</strong> error message. Users are unable to log in via social auth.</td></tr>
+        <tr><td>Steps to Reproduce</td><td>1. Open the app.<br>2. Tap "Continue with Google" (or other social provider).<br>3. Select/enter an email account.<br>4. Observe error.</td></tr>
+        <tr><td>Expected</td><td>User is authenticated and redirected to the dashboard.</td></tr>
+        <tr><td>Actual</td><td><em>"An error occurred"</em> is displayed. Login fails for all tested accounts.</td></tr>
+        <tr><td>Status</td><td class="failed">🔴 Open</td></tr>
+      </table>
+    </div>
+
+    <div class="bug-card medium">
+      <h3>🟡 REG-002 — IAP Screen &amp; Pop-up Not Localized</h3>
+      <table>
+        <tr><td>Severity</td><td>🟡 Medium</td></tr>
+        <tr><td>Area</td><td>Localization / IAP</td></tr>
+        <tr><td>Description</td><td>The app correctly supports multiple languages across all screens. However, the <strong>IAP Plans screen</strong> and the <strong>IAP purchase pop-up/bottom sheet</strong> remain in English regardless of the device language setting.</td></tr>
+        <tr><td>Steps to Reproduce</td><td>1. Change device language to any non-English language.<br>2. Open the app and navigate to the IAP / Plans screen.<br>3. Observe that plan names, descriptions, and the purchase pop-up text are displayed in English.</td></tr>
+        <tr><td>Expected</td><td>IAP Plans screen and purchase pop-up should display text in the device's selected language.</td></tr>
+        <tr><td>Actual</td><td>IAP Plans screen and purchase pop-up always display in English.</td></tr>
+        <tr><td>Status</td><td class="partial">🟡 Open</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- UI/UX -->
+  <section>
+    <h2>5. UI &amp; UX Analysis</h2>
+    <ul>
+      <li><strong>Visual Polish:</strong> IAP plan cards follow modern design standards. "Success" feedback is clear with appropriate interactive toast notifications.</li>
+      <li><strong>Typography &amp; Spacing:</strong> Consistent spacing across small (Android 11) and large (Android 14) viewports.</li>
+      <li><strong>Feedback Loops:</strong> The app provides immediate visual feedback on credit balance updates without requiring a manual refresh.</li>
+    </ul>
+  </section>
+
+  <!-- Compatibility -->
+  <section>
+    <h2>6. Cross-Platform / Device Compatibility</h2>
+    <ul>
+      <li><strong>Android 11 &amp; 12 (Legacy/Mid-range):</strong> Stable; no UI overlap.</li>
+      <li><strong>Android 13 &amp; 14 (Latest/High-end):</strong> Performance is optimal; IAP billing library 5.x/6.x integration remains stable.</li>
+      <li><strong>Responsive UI:</strong> Verified on Small (5.5"), Medium (6.2"), and Large (Tablet/Foldable) screens.</li>
+    </ul>
+  </section>
+
+  <!-- Known Issues -->
+  <section>
+    <h2>7. Known Issues Summary</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Area</th><th>Severity</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>REG-001</td><td>Social Authentication</td><td class="failed">🔴 High</td><td class="failed">Open</td></tr>
+        <tr><td>REG-002</td><td>IAP Localization</td><td class="partial">🟡 Medium</td><td class="partial">Open</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">✅ Previously reported bugs IAP-001 and IAP-002 have been fully resolved.</div>
+  </section>
+
+  <!-- Recommendation -->
+  <section>
+    <h2>8. Recommendation</h2>
+    <p>The production build <strong>passes all IAP test cases</strong> and core functionality is stable. However, <strong>two regression issues</strong> (REG-001: Social Auth failure, REG-002: IAP screen localization) must be addressed before the build can be fully certified. A re-test is required after fixes are applied.</p>
+  </section>
+
+</main>
+
+<footer>
+  Lead QA Engineer: Shahnawaz &nbsp;|&nbsp; Environment: Production &nbsp;|&nbsp; Evidence: CD_IAP_Test_Suite\Evidence\
+</footer>
+
+</body>
+</html>
